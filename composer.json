@@ -21,7 +21,7 @@
         "cycle/schema-migrations-generator": "^1.0",
         "zorachka/console": "^1.0",
         "zorachka/container": "^2.0",
-        "zorachka/directories": "dev-main",
+        "zorachka/directories": "dev-dev",
         "zorachka/event-dispatcher": "^2.1"
     },
     "require-dev": {
