@@ -68,11 +68,11 @@ final class DatabaseConfig
         return $this->port;
     }
 
-    public function withPort(string $port): self
+    public function withPort(int $port): self
     {
         Assert::notEmpty($port);
         $new = clone $this;
-        $new->host = $port;
+        $new->port = $port;
 
         return $new;
     }
