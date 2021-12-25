@@ -44,8 +44,8 @@ final class CycleTransaction implements Transaction
      * @inheritDoc
      * @throws \Throwable
      */
-    public function transactional(callable $callback): void
+    public function transactional(callable $callback): mixed
     {
-        $this->database->transaction($callback);
+        return $this->database->transaction($callback);
     }
 }
