@@ -24,7 +24,7 @@ interface Transaction
     /**
      * Manage state of your transaction automatically.
      * @param callable $callback
-     * @return void
+     * @return mixed
      */
-    public function transactional(callable $callback): void;
+    public function transactional(callable $callback): mixed;
 }
