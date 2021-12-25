@@ -16,9 +16,9 @@
     ],
     "require": {
         "php": "^8.0",
-        "cycle/database": "^1.0",
-        "cycle/migrations": "^2.0",
-        "cycle/schema-migrations-generator": "^1.0",
+        "cycle/database": "^2.0",
+        "cycle/migrations": "^3.0",
+        "cycle/schema-migrations-generator": "^2.0",
         "zorachka/console": "^1.0",
         "zorachka/container": "^2.0",
         "zorachka/directories": "dev-dev",

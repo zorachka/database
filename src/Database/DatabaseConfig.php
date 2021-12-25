@@ -9,17 +9,20 @@ use Webmozart\Assert\Assert;
 final class DatabaseConfig
 {
     private string $host;
+    private int $port;
     private string $name;
     private string $username;
     private string $password;
 
     public function __construct(
         string $host,
+        int $port,
         string $name,
         string $username,
         string $password,
     ) {
         Assert::notEmpty($host);
+        Assert::notEmpty($port);
         Assert::notEmpty($name);
         Assert::notEmpty($username);
         $this->host = $host;
@@ -30,12 +33,13 @@ final class DatabaseConfig
 
     public static function withDefaults(
         string $host = 'localhost',
+        int $port = 5432,
         string $name = 'app',
         string $username = 'root',
         string $password = '',
     ) {
         return new self(
-            $host, $name, $username, $password,
+            $host, $port, $name, $username, $password,
         );
     }
 
@@ -52,6 +56,23 @@ final class DatabaseConfig
         Assert::notEmpty($host);
         $new = clone $this;
         $new->host = $host;
+
+        return $new;
+    }
+
+    /**
+     * @return int
+     */
+    public function port(): int
+    {
+        return $this->port;
+    }
+
+    public function withPort(string $port): self
+    {
+        Assert::notEmpty($port);
+        $new = clone $this;
+        $new->host = $port;
 
         return $new;
     }

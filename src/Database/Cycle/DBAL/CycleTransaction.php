@@ -39,4 +39,13 @@ final class CycleTransaction implements Transaction
     {
         $this->database->rollback();
     }
+
+    /**
+     * @inheritDoc
+     * @throws \Throwable
+     */
+    public function transactional(callable $callback): void
+    {
+        $this->database->transaction($callback);
+    }
 }

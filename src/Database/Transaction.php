@@ -20,4 +20,11 @@ interface Transaction
      * Rollback DB transaction.
      */
     public function rollback(): void;
+
+    /**
+     * Manage state of your transaction automatically.
+     * @param callable $callback
+     * @return void
+     */
+    public function transactional(callable $callback): void;
 }
