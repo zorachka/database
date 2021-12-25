@@ -2,15 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Zorachka\Framework\Database\Cycle\Migrations\Console\Migration;
+namespace Zorachka\Framework\Migrations\Cycle\Migrations\Console\Migration;
 
-use Cycle\Migrations\Migration\Status;
 use Cycle\Migrations\MigrationInterface;
+use Cycle\Migrations\State;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Zorachka\Framework\Database\Cycle\Migrations\Event\AfterMigrate;
-use Zorachka\Framework\Database\Cycle\Migrations\Event\BeforeMigrate;
+use Zorachka\Framework\Migrations\Cycle\Migrations\Event\AfterMigrate;
+use Zorachka\Framework\Migrations\Cycle\Migrations\Event\BeforeMigrate;
 
 final class DownCommand extends BaseMigrationCommand
 {
@@ -27,14 +28,15 @@ final class DownCommand extends BaseMigrationCommand
         $migrations = $this->findMigrations($output);
         // check any executed migration
         foreach (array_reverse($migrations) as $migration) {
-            if ($migration->getState()->getStatus() === Status::STATUS_EXECUTED) {
+            if ($migration->getState()->getStatus() === State::STATUS_EXECUTED) {
                 $exist = true;
                 break;
             }
         }
         if (!isset($migration)) {
             $output->writeln('<fg=red>No migration found for rollback</>');
-            return 0;
+
+            return Command::SUCCESS;
         }
 
         // Confirm
@@ -62,6 +64,7 @@ final class DownCommand extends BaseMigrationCommand
         } finally {
             $this->eventDispatcher->dispatch(new AfterMigrate());
         }
-        return 0;
+
+        return Command::SUCCESS;
     }
 }

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Zorachka\Framework\Database;
+namespace Zorachka\Framework\Migrations;
 
 use Zorachka\Framework\Container\ServiceProvider;
 
-final class DatabaseServiceProvider implements ServiceProvider
+final class MigrationsServiceProvider implements ServiceProvider
 {
     /**
      * @inheritDoc
@@ -14,7 +14,7 @@ final class DatabaseServiceProvider implements ServiceProvider
     public static function getDefinitions(): array
     {
         return [
-            DatabaseConfig::class => fn() => DatabaseConfig::withDefaults(),
+            MigrationsConfig::class => fn() => MigrationsConfig::withDefaults(),
         ];
     }
 
