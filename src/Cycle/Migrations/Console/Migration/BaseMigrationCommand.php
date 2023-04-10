@@ -2,15 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Zorachka\Framework\Database\Cycle\Migrations\Console\Migration;
+namespace Zorachka\Database\Cycle\Migrations\Console\Migration;
 
 use Cycle\Database\DatabaseManager;
 use Cycle\Migrations\Config\MigrationConfig;
 use Cycle\Migrations\Exception\RepositoryException;
-use Cycle\Migrations\Migration\Status;
 use Cycle\Migrations\MigrationInterface;
 use Cycle\Migrations\Migrator;
+use Cycle\Migrations\State;
 use Cycle\Schema\Generator\Migrations\MigrationImage;
+use Exception;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -18,9 +19,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 abstract class BaseMigrationCommand extends Command
 {
     protected const MIGRATION_STATUS = [
-        Status::STATUS_UNDEFINED => 'undefined',
-        Status::STATUS_PENDING => 'pending',
-        Status::STATUS_EXECUTED => 'executed',
+        State::STATUS_UNDEFINED => 'undefined',
+        State::STATUS_PENDING => 'pending',
+        State::STATUS_EXECUTED => 'executed',
     ];
     protected DatabaseManager $manager;
     protected MigrationConfig $migrationConfig;
@@ -44,7 +45,7 @@ abstract class BaseMigrationCommand extends Command
         OutputInterface $output,
         string $name,
         ?string $database = null
-    ) {
+    ): ?MigrationImage {
         if ($database === null) {
             // get default database
             $database = $this->manager->database()->getName();
@@ -56,6 +57,7 @@ abstract class BaseMigrationCommand extends Command
         try {
             $migrationFile = $migrator->getRepository()->registerMigration(
                 $migrationSkeleton->buildFileName(),
+                /** @phpstan-ignore-next-line */
                 $migrationSkeleton->getClass()->getName(),
                 $migrationSkeleton->getFile()->render()
             );
@@ -72,9 +74,8 @@ abstract class BaseMigrationCommand extends Command
     }
 
     /**
-     * @param OutputInterface $output
      * @return MigrationInterface[]
-     * @throws \Exception
+     * @throws Exception
      */
     protected function findMigrations(OutputInterface $output): array
     {

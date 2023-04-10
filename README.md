@@ -6,11 +6,9 @@
     <br>
 </p>
 
-Database component
-
-
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/zorachka/database.svg?style=flat-square)](https://packagist.org/packages/zorachka/database)
-[![Tests](https://github.com/zorachka/database/actions/workflows/run-tests.yml/badge.svg?branch=main)](https://github.com/zorachka/database/actions/workflows/run-tests.yml)
+[![Tests](https://github.com/zorachka/database/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/zorachka/database/actions/workflows/test.yml)
+[![Analysis](https://github.com/zorachka/database/actions/workflows/analyse.yml/badge.svg?branch=main)](https://github.com/zorachka/database/actions/workflows/analyse.yml)
 [![Total Downloads](https://img.shields.io/packagist/dt/zorachka/database.svg?style=flat-square)](https://packagist.org/packages/zorachka/database)
 ## Installation
 
@@ -21,6 +19,8 @@ composer require zorachka/database
 ```
 
 ## Usage
+
+To create a container you need to pass array of `ServiceProvider` objects interface:
 
 ```php
 <?php

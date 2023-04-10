@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Zorachka\Framework\Database\Cycle\DBAL;
+namespace Zorachka\Database\Cycle\DBAL;
 
 use Cycle\Database\Database;
-use Zorachka\Framework\Database\Transaction;
+use Throwable;
+use Zorachka\Database\Transaction;
 
 final class CycleTransaction implements Transaction
 {
@@ -16,27 +17,28 @@ final class CycleTransaction implements Transaction
         $this->database = $database;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function begin(): void
     {
         $this->database->begin();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function commit(): void
     {
         $this->database->commit();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function rollback(): void
     {
         $this->database->rollback();
+    }
+
+    /**
+     * @throws Throwable
+     */
+    public function transactionally(callable $callback): void
+    {
+        $this->database->transaction(static function () use ($callback): void {
+            $callback();
+        });
     }
 }

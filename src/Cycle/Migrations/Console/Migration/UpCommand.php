@@ -2,15 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Zorachka\Framework\Database\Cycle\Migrations\Console\Migration;
+namespace Zorachka\Database\Cycle\Migrations\Console\Migration;
 
-use Cycle\Migrations\Migration\Status;
 use Cycle\Migrations\MigrationInterface;
+use Cycle\Migrations\State;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Zorachka\Framework\Database\Cycle\Migrations\Event\AfterMigrate;
-use Zorachka\Framework\Database\Cycle\Migrations\Event\BeforeMigrate;
+use Zorachka\Database\Cycle\Migrations\Event\AfterMigrate;
+use Zorachka\Database\Cycle\Migrations\Event\BeforeMigrate;
 
 final class UpCommand extends BaseMigrationCommand
 {
@@ -28,14 +29,15 @@ final class UpCommand extends BaseMigrationCommand
         // check any not executed migration
         $exist = false;
         foreach ($migrations as $migration) {
-            if ($migration->getState()->getStatus() === Status::STATUS_PENDING) {
+            if ($migration->getState()->getStatus() === State::STATUS_PENDING) {
                 $exist = true;
                 break;
             }
         }
         if (!$exist) {
             $output->writeln('<fg=red>No migration found for execute</>');
-            return 0;
+
+            return Command::SUCCESS;
         }
 
         $migrator = $this->migrator;
@@ -44,7 +46,7 @@ final class UpCommand extends BaseMigrationCommand
         if (!$migrator->getConfig()->isSafe()) {
             $newMigrations = [];
             foreach ($migrations as $migration) {
-                if ($migration->getState()->getStatus() === Status::STATUS_PENDING) {
+                if ($migration->getState()->getStatus() === State::STATUS_PENDING) {
                     $newMigrations[] = $migration;
                 }
             }
@@ -64,8 +66,9 @@ final class UpCommand extends BaseMigrationCommand
                 '? (yes|no) ',
                 false
             );
+            /** @phpstan-ignore-next-line */
             if (!$this->getHelper('question')->ask($input, $output, $question)) {
-                return 0;
+                return Command::SUCCESS;
             }
         }
 
@@ -87,6 +90,6 @@ final class UpCommand extends BaseMigrationCommand
             $this->eventDispatcher->dispatch(new AfterMigrate());
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 }
