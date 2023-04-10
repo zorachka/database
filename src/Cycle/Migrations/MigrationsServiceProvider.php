@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Zorachka\Framework\Database\Cycle\Migrations;
+namespace Zorachka\Database\Cycle\Migrations;
 
-use Psr\Container\ContainerInterface;
 use Cycle\Database\DatabaseManager;
 use Cycle\Migrations\Config\MigrationConfig;
-use Cycle\Migrations\Migrator;
 use Cycle\Migrations\FileRepository;
-use Zorachka\Framework\Container\ServiceProvider;
-use Zorachka\Framework\Database\Cycle\Migrations\Event\AfterMigrate;
-use Zorachka\Framework\Database\Cycle\Migrations\Event\BeforeMigrate;
-use Zorachka\Framework\Database\MigrationsConfig;
-use Zorachka\Framework\Directories\Directories;
-use Zorachka\Framework\EventDispatcher\EventDispatcherConfig;
-use Zorachka\Framework\EventDispatcher\NullableEventListener;
+use Cycle\Migrations\Migrator;
+use Psr\Container\ContainerInterface;
+use Zorachka\Container\ServiceProvider;
+use Zorachka\Database\Cycle\Migrations\Event\AfterMigrate;
+use Zorachka\Database\Cycle\Migrations\Event\BeforeMigrate;
+use Zorachka\Database\MigrationsConfig;
+use Zorachka\Directories\Directories;
+use Zorachka\EventDispatcher\EventDispatcherConfig;
+use Zorachka\EventDispatcher\NullableEventListener;
 
 final class MigrationsServiceProvider implements ServiceProvider
 {
@@ -31,12 +31,13 @@ final class MigrationsServiceProvider implements ServiceProvider
                 return new MigrationConfig([
                     'directory' => $directories->get($config->directory()),
                     'table' => $config->table(),
-                    'safe' => $config->safe(),
+                    'safe' => $config->isSafe(),
                 ]);
             },
             Migrator::class => static function (ContainerInterface $container) {
-                /** @var MigrationConfig $config */
+                /** @var MigrationConfig $migrationConfig */
                 $migrationConfig = $container->get(MigrationConfig::class);
+
                 /** @var DatabaseManager $dbal */
                 $dbal = $container->get(DatabaseManager::class);
 
@@ -55,13 +56,10 @@ final class MigrationsServiceProvider implements ServiceProvider
         ];
     }
 
-    /**
-     * @inheritDoc
-     */
     public static function getExtensions(): array
     {
         return [
-            EventDispatcherConfig::class => static function(EventDispatcherConfig $config) {
+            EventDispatcherConfig::class => static function (EventDispatcherConfig $config) {
                 return $config
                     ->withEventListener(BeforeMigrate::class, NullableEventListener::class)
                     ->withEventListener(AfterMigrate::class, NullableEventListener::class);

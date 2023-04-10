@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zorachka\Framework\Database;
+namespace Zorachka\Database;
 
 interface Transaction
 {
@@ -20,4 +20,9 @@ interface Transaction
      * Rollback DB transaction.
      */
     public function rollback(): void;
+
+    /**
+     * Manage state of your transaction automatically.
+     */
+    public function transactionally(callable $callback): void;
 }
