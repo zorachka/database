@@ -14,7 +14,7 @@ use Zorachka\Database\Transaction;
 use Zorachka\Directories\Directories;
 use Zorachka\Directories\DirectoryAlias;
 
-final class CycleDBALServiceProvider implements ServiceProvider
+final class DBALServiceProvider implements ServiceProvider
 {
     public static function getDefinitions(): array
     {
