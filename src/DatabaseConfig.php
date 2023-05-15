@@ -46,7 +46,6 @@ final class DatabaseConfig
         Assert::notEmpty($name);
         Assert::notEmpty($host);
         Assert::notEmpty($port);
-        Assert::notEmpty($username);
         $this->name = $name;
         $this->host = $host;
         $this->port = $port;
