@@ -11,6 +11,6 @@ final class <className> extends AbstractMigration
 {
     public function up(Schema $schema): void
     {
-        <up>
+<up>
     }
 }
