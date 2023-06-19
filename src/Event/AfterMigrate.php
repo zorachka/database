@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zorachka\Database\Cycle\Migrations\Event;
+namespace Zorachka\Database\Event;
 
 final class AfterMigrate
 {

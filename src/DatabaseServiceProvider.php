@@ -4,18 +4,14 @@ declare(strict_types=1);
 
 namespace Zorachka\Database;
 
-use Zorachka\Console\ConsoleConfig;
 use Zorachka\Container\ServiceProvider;
-use Zorachka\Database\Cycle\Migrations\Console\Migration\CreateCommand;
-use Zorachka\Database\Cycle\Migrations\Console\Migration\DownCommand;
-use Zorachka\Database\Cycle\Migrations\Console\Migration\ListCommand;
-use Zorachka\Database\Cycle\Migrations\Console\Migration\UpCommand;
+use Zorachka\Database\Event\AfterMigrate;
+use Zorachka\Database\Event\BeforeMigrate;
+use Zorachka\EventDispatcher\EventDispatcherConfig;
+use Zorachka\EventDispatcher\NullableEventListener;
 
 final class DatabaseServiceProvider implements ServiceProvider
 {
-    /**
-     *
-     */
     public static function getDefinitions(): array
     {
         return [
@@ -24,18 +20,21 @@ final class DatabaseServiceProvider implements ServiceProvider
         ];
     }
 
-    /**
-     *
-     */
     public static function getExtensions(): array
     {
         return [
-            ConsoleConfig::class => static function (ConsoleConfig $config) {
+            EventDispatcherConfig::class => static function (
+                EventDispatcherConfig $config
+            ) {
                 return $config
-                    ->withCommand(ListCommand::class)
-                    ->withCommand(CreateCommand::class)
-                    ->withCommand(UpCommand::class)
-                    ->withCommand(DownCommand::class);
+                    ->withEventListener(
+                        BeforeMigrate::class,
+                        NullableEventListener::class
+                    )
+                    ->withEventListener(
+                        AfterMigrate::class,
+                        NullableEventListener::class
+                    );
             },
         ];
     }
