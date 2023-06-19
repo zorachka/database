@@ -8,6 +8,7 @@ use Webmozart\Assert\Assert;
 
 final class DatabaseConfig
 {
+    private Driver $driver;
     /**
      * @var non-empty-string
      */
@@ -37,6 +38,7 @@ final class DatabaseConfig
      * @param non-empty-string|null $password
      */
     private function __construct(
+        Driver $driver,
         string $name,
         string $host,
         int $port,
@@ -46,6 +48,8 @@ final class DatabaseConfig
         Assert::notEmpty($name);
         Assert::notEmpty($host);
         Assert::notEmpty($port);
+
+        $this->driver = $driver;
         $this->name = $name;
         $this->host = $host;
         $this->port = $port;
@@ -59,9 +63,9 @@ final class DatabaseConfig
      * @param positive-int $port
      * @param non-empty-string|null $username
      * @param non-empty-string|null $password
-     * @return self
      */
     public static function withDefaults(
+        Driver $driver = Driver::PGSQL,
         string $name = 'app',
         string $host = 'localhost',
         int $port = 5432,
@@ -69,12 +73,26 @@ final class DatabaseConfig
         ?string $password = null,
     ): self {
         return new self(
+            $driver,
             $name,
             $host,
             $port,
             $username,
             $password,
         );
+    }
+
+    public function driver(): Driver
+    {
+        return $this->driver;
+    }
+
+    public function withDriver(Driver $driver): self
+    {
+        $new = clone $this;
+        $new->driver = $driver;
+
+        return $new;
     }
 
     /**
