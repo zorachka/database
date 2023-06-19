@@ -10,8 +10,8 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Zorachka\Database\Cycle\Migrations\Event\AfterMigrate;
-use Zorachka\Database\Cycle\Migrations\Event\BeforeMigrate;
+use Zorachka\Database\Event\AfterMigrate;
+use Zorachka\Database\Event\BeforeMigrate;
 
 final class UpCommand extends BaseMigrationCommand
 {
@@ -23,8 +23,10 @@ final class UpCommand extends BaseMigrationCommand
             ->setDescription('Execute all new migrations');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): int
-    {
+    protected function execute(
+        InputInterface $input,
+        OutputInterface $output
+    ): int {
         $migrations = $this->findMigrations($output);
         // check any not executed migration
         $exist = false;
@@ -46,7 +48,8 @@ final class UpCommand extends BaseMigrationCommand
         if (!$migrator->getConfig()->isSafe()) {
             $newMigrations = [];
             foreach ($migrations as $migration) {
-                if ($migration->getState()->getStatus() === State::STATUS_PENDING) {
+                if ($migration->getState()->getStatus(
+                ) === State::STATUS_PENDING) {
                     $newMigrations[] = $migration;
                 }
             }
@@ -58,7 +61,9 @@ final class UpCommand extends BaseMigrationCommand
                 'to be applied:</>'
             );
             foreach ($newMigrations as $migration) {
-                $output->writeln('— <fg=cyan>' . $migration->getState()->getName() . '</>');
+                $output->writeln(
+                    '— <fg=cyan>' . $migration->getState()->getName() . '</>'
+                );
             }
             $question = new ConfirmationQuestion(
                 'Apply the above ' .
@@ -67,7 +72,11 @@ final class UpCommand extends BaseMigrationCommand
                 false
             );
             /** @phpstan-ignore-next-line */
-            if (!$this->getHelper('question')->ask($input, $output, $question)) {
+            if (!$this->getHelper('question')->ask(
+                $input,
+                $output,
+                $question
+            )) {
                 return Command::SUCCESS;
             }
         }
@@ -83,8 +92,10 @@ final class UpCommand extends BaseMigrationCommand
 
                 $state = $migration->getState();
                 $status = $state->getStatus();
-                $output->writeln('<fg=cyan>' . $state->getName() . '</>: '
-                    . (self::MIGRATION_STATUS[$status] ?? $status));
+                $output->writeln(
+                    '<fg=cyan>' . $state->getName() . '</>: '
+                    . (self::MIGRATION_STATUS[$status] ?? $status)
+                );
             } while (--$limit > 0);
         } finally {
             $this->eventDispatcher->dispatch(new AfterMigrate());

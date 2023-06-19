@@ -9,20 +9,23 @@ use Cycle\Migrations\Config\MigrationConfig;
 use Cycle\Migrations\FileRepository;
 use Cycle\Migrations\Migrator;
 use Psr\Container\ContainerInterface;
+use Zorachka\Console\ConsoleConfig;
 use Zorachka\Container\ServiceProvider;
-use Zorachka\Database\Cycle\Migrations\Event\AfterMigrate;
-use Zorachka\Database\Cycle\Migrations\Event\BeforeMigrate;
+use Zorachka\Database\Cycle\Migrations\Console\Migration\CreateCommand;
+use Zorachka\Database\Cycle\Migrations\Console\Migration\DownCommand;
+use Zorachka\Database\Cycle\Migrations\Console\Migration\ListCommand;
+use Zorachka\Database\Cycle\Migrations\Console\Migration\UpCommand;
 use Zorachka\Database\MigrationsConfig;
 use Zorachka\Directories\Directories;
-use Zorachka\EventDispatcher\EventDispatcherConfig;
-use Zorachka\EventDispatcher\NullableEventListener;
 
 final class MigrationsServiceProvider implements ServiceProvider
 {
     public static function getDefinitions(): array
     {
         return [
-            MigrationConfig::class => static function (ContainerInterface $container) {
+            MigrationConfig::class => static function (
+                ContainerInterface $container
+            ) {
                 /** @var MigrationsConfig $config */
                 $config = $container->get(MigrationsConfig::class);
                 /** @var Directories $directories */
@@ -59,10 +62,12 @@ final class MigrationsServiceProvider implements ServiceProvider
     public static function getExtensions(): array
     {
         return [
-            EventDispatcherConfig::class => static function (EventDispatcherConfig $config) {
+            ConsoleConfig::class => static function (ConsoleConfig $config) {
                 return $config
-                    ->withEventListener(BeforeMigrate::class, NullableEventListener::class)
-                    ->withEventListener(AfterMigrate::class, NullableEventListener::class);
+                    ->withCommand(ListCommand::class)
+                    ->withCommand(CreateCommand::class)
+                    ->withCommand(UpCommand::class)
+                    ->withCommand(DownCommand::class);
             },
         ];
     }
