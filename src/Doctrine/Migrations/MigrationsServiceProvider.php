@@ -18,6 +18,7 @@ use Zorachka\Container\ServiceProvider;
 use Zorachka\Database\DatabaseConfig;
 use Zorachka\Database\Driver;
 use Zorachka\Database\MigrationsConfig;
+use Zorachka\Directories\Directories;
 
 final class MigrationsServiceProvider implements ServiceProvider
 {
@@ -49,10 +50,12 @@ final class MigrationsServiceProvider implements ServiceProvider
 
                 /** @var MigrationsConfig $migrationsConfig */
                 $migrationsConfig = $container->get(MigrationsConfig::class);
+                /** @var Directories $directories */
+                $directories = $container->get(Directories::class);
 
                 $configuration->addMigrationsDirectory(
                     $migrationsConfig->namespace(),
-                    $migrationsConfig->directory()
+                    $directories->get($migrationsConfig->directory())
                 );
                 $configuration->setAllOrNothing(true);
                 $configuration->setCheckDatabasePlatform(false);
