@@ -12,15 +12,9 @@
         "zorachka/console": "^1.1",
         "zorachka/container": "^3.1",
         "zorachka/directories": "dev-main",
-        "zorachka/event-dispatcher": "^3.0"
+        "zorachka/event-dispatcher": "^3.1"
     },
     "license": "MIT",
-    "config": {
-        "sort-packages": true,
-        "allow-plugins": {
-            "phpstan/extension-installer": true
-        }
-    },
     "authors": [
         {
             "name": "Siarhei Bautrukevich",
@@ -29,26 +23,19 @@
     ],
     "autoload": {
         "psr-4": {
-            "Zorachka\\Database\\": "./src"
+            "Zorachka\\Database\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Zorachka\\Database\\Tests\\": "./tests"
+            "Zorachka\\Database\\Tests\\": "tests"
         }
     },
-    "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.16",
-        "phpstan/extension-installer": "^1.2",
-        "phpstan/phpstan": "^1.10",
-        "phpstan/phpstan-phpunit": "^1.3",
-        "phpunit/phpunit": "^9.6"
-    },
-    "scripts": {
-        "cs-lint": "php-cs-fixer fix --config=.php-cs-fixer.php --allow-risky=yes --dry-run --diff",
-        "cs-fix": "php-cs-fixer fix --config=.php-cs-fixer.php --allow-risky=yes",
-        "analyse": "phpstan analyse -c phpstan.neon",
-        "test": "vendor/bin/phpunit --colors=always"
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true
