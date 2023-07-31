@@ -24,17 +24,15 @@ interface EntityRepository
     public function hasById(string $id, string $in): bool;
 
     /**
-     * @param array<string, string|int|bool|null> $data
+     * @param array<string, bool|int|string|null> $data
      * @param non-empty-string $to
-     * @return void
      * @throws CouldNotSaveEntity
      */
     public function save(array $data, string $to): void;
 
     /**
-     * @param array<string, string|int|bool|null> $data
+     * @param array<string, bool|int|string|null> $data
      * @param non-empty-string $in
-     * @return void
      */
     public function update(array $data, string $in): void;
 }
