@@ -60,11 +60,11 @@ final class DatabaseEntityRepositoryUsingCycle implements EntityRepository
             ->fetch();
     }
 
-    public function update(array $data, string $in): void
+    public function update(array $data, string $in, array $condition): void
     {
         try {
             $this->database->table($in)
-                ->update($data);
+                ->update($data, $condition);
         } catch (Exception $exception) {
             throw CouldNotSaveEntity::withReason($exception->getMessage());
         }

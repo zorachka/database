@@ -33,6 +33,7 @@ interface EntityRepository
     /**
      * @param array<string, bool|int|string|null> $data
      * @param non-empty-string $in
+     * @param array<string, bool|int|string|null> $condition
      */
-    public function update(array $data, string $in): void;
+    public function update(array $data, string $in, array $condition): void;
 }
