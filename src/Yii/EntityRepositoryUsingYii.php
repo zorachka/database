@@ -11,14 +11,18 @@ use Yiisoft\Db\Exception\Exception;
 use Yiisoft\Db\Exception\InvalidConfigException;
 use Yiisoft\Db\Query\Query;
 use Zorachka\Database\Repository\EntityRepository;
+use Zorachka\Database\Repository\Exception\CouldNotDeleteEntities;
+use Zorachka\Database\Repository\Exception\CouldNotDeleteEntity;
 use Zorachka\Database\Repository\Exception\CouldNotGetEntityById;
 use Zorachka\Database\Repository\Exception\CouldNotSaveEntity;
+use Zorachka\Database\Repository\Exception\CouldNotUpdateEntity;
 
-final class DatabaseRepositoryUsingYii implements EntityRepository
+final class EntityRepositoryUsingYii implements EntityRepository
 {
     public function __construct(
         private readonly ConnectionInterface $connection,
-    ) {}
+    ) {
+    }
 
     public function getById(string $id, string $from): array
     {
@@ -69,7 +73,27 @@ final class DatabaseRepositoryUsingYii implements EntityRepository
             $command = $this->connection->createCommand();
             $command->update($in, $data, $condition)->execute();
         } catch (Throwable $exception) {
-            throw CouldNotSaveEntity::withReason($exception->getMessage());
+            throw CouldNotUpdateEntity::withReason($exception->getMessage());
+        }
+    }
+
+    public function deleteOne(string $id, string $in): void
+    {
+        try {
+            $command = $this->connection->createCommand();
+            $command->delete($in, ['id' => $id])->execute();
+        } catch (Throwable $exception) {
+            throw CouldNotDeleteEntity::withReason($exception->getMessage());
+        }
+    }
+
+    public function deleteMany(array $ids, string $in): void
+    {
+        try {
+            $command = $this->connection->createCommand();
+            $command->delete($in, ['id' => $ids])->execute();
+        } catch (Throwable $exception) {
+            throw CouldNotDeleteEntities::withReason($exception->getMessage());
         }
     }
 }

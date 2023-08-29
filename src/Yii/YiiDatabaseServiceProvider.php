@@ -44,13 +44,13 @@ final class YiiDatabaseServiceProvider implements ServiceProvider
                 /** @var ConnectionInterface $connection */
                 $connection = $container->get(ConnectionInterface::class);
 
-                return new DatabaseTransactionUsingYii($connection);
+                return new TransactionUsingYii($connection);
             },
             EntityRepository::class => static function (ContainerInterface $container) {
                 /** @var ConnectionInterface $connection */
                 $connection = $container->get(ConnectionInterface::class);
 
-                return new DatabaseRepositoryUsingYii($connection);
+                return new EntityRepositoryUsingYii($connection);
             },
         ];
     }

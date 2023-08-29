@@ -69,4 +69,14 @@ final class DatabaseEntityRepositoryUsingCycle implements EntityRepository
             throw CouldNotSaveEntity::withReason($exception->getMessage());
         }
     }
+
+    public function deleteOne(string $id, string $in): void
+    {
+        // TODO: Implement deleteOne() method.
+    }
+
+    public function deleteMany(array $ids, string $in): void
+    {
+        // TODO: Implement deleteMany() method.
+    }
 }

@@ -36,4 +36,16 @@ interface EntityRepository
      * @param array<string, bool|int|string|null> $condition
      */
     public function update(array $data, string $in, array $condition): void;
+
+    /**
+     * @param non-empty-string $id
+     * @param non-empty-string $in
+     */
+    public function deleteOne(string $id, string $in): void;
+
+    /**
+     * @param non-empty-string[] $ids
+     * @param non-empty-string $in
+     */
+    public function deleteMany(array $ids, string $in): void;
 }
